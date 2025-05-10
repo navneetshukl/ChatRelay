@@ -13,7 +13,7 @@ type BotRequest struct {
 
 type BotResponse struct {
 	StatusCode   int    `json:"status_code"`
-	Error        string `json:"error,omitempty"`
+	ErrorMessage string `json:"error_message,omitempty"`
 	FullResponse string `json:"full_response,omitempty"`
 }
 
@@ -21,8 +21,8 @@ func SendChatResponse(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		json.NewEncoder(w).Encode(BotResponse{
-			StatusCode: http.StatusMethodNotAllowed,
-			Error:      "Only POST method is allowed",
+			StatusCode:   http.StatusMethodNotAllowed,
+			ErrorMessage: "Only POST method is allowed",
 		})
 		return
 	}
@@ -32,7 +32,7 @@ func SendChatResponse(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(BotResponse{
 			StatusCode: http.StatusBadRequest,
-			Error:      "Invalid JSON body: " + err.Error(),
+			ErrorMessage:      "Invalid JSON body: " + err.Error(),
 		})
 		return
 	}
