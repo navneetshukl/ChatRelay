@@ -1,0 +1,24 @@
+1. socketmode.EventTypeEventsAPI:  This gives the event of 2 types. "message and app_mention".
+It has filed name inner_event type and inner_event data.It has "event type" field and has name event callback.
+
+CASE - > when I am mentioning the bot
+
+2025/05/10 10:11:38 ##############################################
+2025/05/10 10:11:38 Event is  {vk74qT3wLMbkkf03ZLwYTTr6 T08RH207UNA event_callback A08RH2BNQB0  0xc0003280b0 {app_mention 0xc000328160}}
+2025/05/10 10:11:38 Inner Event is  {app_mention 0xc000328160}
+2025/05/10 10:11:38 Inner Event type is  app_mention
+2025/05/10 10:11:38 Inner Event data is  &{app_mention U08RH2082LW <@U08R931LXAT> how are you? 1746852096.730399  C08RH20HX46 1746852096.730399    <nil>}
+2025/05/10 10:11:38 Event Type is  event_callback
+2025/05/10 10:11:38 idx is  1
+2025/05/10 10:11:38 ##############################################
+
+CASE - > When I am direct messaging
+
+2025/05/10 10:14:20 ##############################################
+2025/05/10 10:14:20 Event is  {vk74qT3wLMbkkf03ZLwYTTr6 T08RH207UNA event_callback A08RH2BNQB0  0xc0003282c0 {message 0xc00020c480}}
+2025/05/10 10:14:20 Inner Event is  {message 0xc00020c480}
+2025/05/10 10:14:20 Inner Event type is  message
+2025/05/10 10:14:20 Inner Event data is  &{4cb9c710-daed-42ef-9ec9-b0357dd242c7 message U08RH2082LW how are you  1746852259.776239 C08RH20HX46 channel 1746852259.776239   <nil> <nil> <nil>     <nil> false [] {[0xc000240540]} [] { map[]} <nil>}
+2025/05/10 10:14:20 Event Type is  event_callback
+2025/05/10 10:14:20 idx is  2
+2025/05/10 10:14:20 ##############################################
