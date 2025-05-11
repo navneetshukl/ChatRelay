@@ -2,6 +2,7 @@ package mock
 
 import (
 	"bytes"
+	"chat-relay/internals/config"
 	"chat-relay/internals/core/chat"
 	"encoding/json"
 	"io"
@@ -10,19 +11,21 @@ import (
 )
 
 type MockClient struct {
+	Config *config.Config
 }
 
-func NewMockClientService()MockClientService{
-	return &MockClient{}
+func NewMockClientService(conf *config.Config) MockClientService {
+	return &MockClient{
+		Config: conf,
+	}
 }
-
 
 type MockClientService interface {
 	MockServerResponse(req chat.ChatRequest) (*chat.ChatResponse, error)
 }
 
 func (srv *MockClient) MockServerResponse(req chat.ChatRequest) (*chat.ChatResponse, error) {
-	url := "/v1/chat/stream"
+	url := srv.Config.MockServerConfig.BaseURL + "/v1/chat/stream"
 
 	jsonData, err := json.Marshal(req)
 	if err != nil {
