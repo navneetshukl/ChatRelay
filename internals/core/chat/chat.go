@@ -1,13 +1,13 @@
 package chat
 
 import (
-	"github.com/slack-go/slack"
 	"github.com/slack-go/slack/slackevents"
 )
 
 type ChatRequest struct {
-	UserID string
-	Query  string
+	UserID string `json:"user_id"`
+	Query  string `json:"query"`
+	Event  string `json:"event"`
 }
 
 type ChatResponse struct {
@@ -17,6 +17,6 @@ type ChatResponse struct {
 }
 
 type ChatUseCase interface {
-	MessageEvent(client *slack.Client, event *slackevents.MessageEvent, botUserID string)
-	AppMentionEvent(client *slack.Client, event *slackevents.AppMentionEvent)
+	MessageEvent(event *slackevents.MessageEvent, botUserID string)
+	AppMentionEvent(event *slackevents.AppMentionEvent,botUserID string)
 }

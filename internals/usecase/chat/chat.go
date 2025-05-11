@@ -6,6 +6,7 @@ import (
 	"chat-relay/internals/core/chat"
 	"fmt"
 	"log"
+	"net/http"
 	"strings"
 
 	"github.com/slack-go/slack"
@@ -13,18 +14,20 @@ import (
 )
 
 type ChatUseCaseImpl struct {
-	conf    *config.Config
-	mockSvc mock.MockClientService
+	conf        *config.Config
+	mockSvc     mock.MockClientService
+	slackClient *slack.Client
 }
 
-func NewChatUseCase(conf *config.Config, mock mock.MockClientService) chat.ChatUseCase {
+func NewChatUseCase(conf *config.Config, mock mock.MockClientService, cl *slack.Client) chat.ChatUseCase {
 	return &ChatUseCaseImpl{
-		conf:    conf,
-		mockSvc: mock,
+		conf:        conf,
+		mockSvc:     mock,
+		slackClient: cl,
 	}
 }
 
-func (c *ChatUseCaseImpl) MessageEvent(client *slack.Client, event *slackevents.MessageEvent, botUserID string) {
+func (c *ChatUseCaseImpl) MessageEvent(event *slackevents.MessageEvent, botUserID string) {
 
 	// <@U08R931LXAT>
 
@@ -39,11 +42,29 @@ func (c *ChatUseCaseImpl) MessageEvent(client *slack.Client, event *slackevents.
 		log.Println("Channel is ", event.Channel)
 		log.Println("*************************************************************************")
 
-		client.PostMessage(event.Channel, slack.MsgOptionText("Simple Message : Let's Celebrate Diwali 😎", false))
+		req := chat.ChatRequest{
+			UserID: event.User,
+			Query:  event.Text,
+			Event:  "message_event",
+		}
+		resp, err := c.mockSvc.MockServerResponse(req)
+		if err != nil {
+			log.Println("error in getting the response from the mock server ", err)
+			return
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			log.Println("Error occured ", resp.ErrorMessage)
+			return
+		}
+
+		msg := fmt.Sprintf("%s: %s", "message_event", resp.Response)
+
+		c.slackClient.PostMessage(event.Channel, slack.MsgOptionText(msg, false))
 	}
 }
 
-func(c *ChatUseCaseImpl) AppMentionEvent(client *slack.Client, event *slackevents.AppMentionEvent) {
+func (c *ChatUseCaseImpl) AppMentionEvent(event *slackevents.AppMentionEvent, botUserID string) {
 
 	log.Println("*************************************************************************")
 	log.Println("Received Message is ", event.Text)
@@ -52,6 +73,26 @@ func(c *ChatUseCaseImpl) AppMentionEvent(client *slack.Client, event *slackevent
 	log.Println("Channel is ", event.Channel)
 	log.Println("*************************************************************************")
 
-	client.PostMessage(event.Channel, slack.MsgOptionText("Bot Message : Let's Play Holi 😎", false))
+	generatedID := fmt.Sprintf("<@%s>", botUserID)
+	formattedQuery := strings.Replace(event.Text, generatedID, "", 1)
 
+	req := chat.ChatRequest{
+		UserID: event.User,
+		Query:  formattedQuery,
+		Event:  "app_mention_event",
+	}
+	resp, err := c.mockSvc.MockServerResponse(req)
+	if err != nil {
+		log.Println("error in getting the response from the mock server ", err)
+		return
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		log.Println("Error occured ", resp.ErrorMessage)
+		return
+	}
+
+	msg := fmt.Sprintf("%s: %s", "appmention_event", resp.Response)
+
+	c.slackClient.PostMessage(event.Channel, slack.MsgOptionText(msg, false))
 }

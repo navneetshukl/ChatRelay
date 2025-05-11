@@ -4,11 +4,14 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type BotRequest struct {
 	UserID string `json:"user_id"`
 	Query  string `json:"query"`
+	Event  string `json:"event"`
 }
 
 type BotResponse struct {
@@ -31,8 +34,8 @@ func SendChatResponse(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(BotResponse{
-			StatusCode: http.StatusBadRequest,
-			ErrorMessage:      "Invalid JSON body: " + err.Error(),
+			StatusCode:   http.StatusBadRequest,
+			ErrorMessage: "Invalid JSON body: " + err.Error(),
 		})
 		return
 	}
@@ -54,10 +57,11 @@ func SendChatResponse(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/v1/chat/stream", SendChatResponse)
+	router := chi.NewRouter()
+	router.Post("/v1/chat/stream", SendChatResponse)
 
 	log.Println("Server running at http://localhost:8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Println("Server failed:", err)
 	}
 }

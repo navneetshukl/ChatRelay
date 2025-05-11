@@ -21,11 +21,11 @@ func main() {
 	}
 
 	log.Println("Config loaded")
-
-	mockServer := mock.NewMockClientService(conf)
-	chatService := chat.NewChatUseCase(conf, mockServer)
 	slackSvc := sl.NewSlackSvc(conf)
 	slackSocketClient := slackSvc.NewSlackClient()
+
+	mockServer := mock.NewMockClientService(conf)
+	chatService := chat.NewChatUseCase(conf, mockServer, &slackSocketClient.Client)
 
 	authTest, err := slackSocketClient.Client.AuthTest()
 	if err != nil {
@@ -59,11 +59,11 @@ func main() {
 				if event.Type == slackevents.CallbackEvent {
 					switch ev := event.InnerEvent.Data.(type) {
 					case *slackevents.AppMentionEvent:
-						chatService.AppMentionEvent(&slackSocketClient.Client, ev)
+						chatService.AppMentionEvent(ev,botUserID)
 
 					case *slackevents.MessageEvent:
 						if ev.SubType == "" && ev.User != botUserID {
-							chatService.MessageEvent(&slackSocketClient.Client, ev, botUserID) // direct message
+							chatService.MessageEvent(ev, botUserID) // direct message
 						}
 					}
 				}
