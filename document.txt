@@ -22,3 +22,54 @@ CASE - > When I am direct messaging
 2025/05/10 10:14:20 Event Type is  event_callback
 2025/05/10 10:14:20 idx is  2
 2025/05/10 10:14:20 ##############################################
+
+1. Why choose socket mode over Events API?
+ Socket mode is fast as compared to Events Api because in socket mode no tunneling is required.Event
+ Api based on network latency.Working locally with socket mode is easy.
+
+2. How to Create account on slack?
+
+a) Login with your credentials and than create your workspace and channel.
+b) https://api.slack.com/apps go to this URL.Click create new app than give the bot name and select
+the workspace.
+c) Click enable socket mode from dashboard.
+d) Click on oauth and permission and give permission for bot like what it is able to do.(Read,write ..).
+e) Click Install.Now It will give Oauth token.Please save it.
+f) There are 2 important token APP_TOKEN and BOT_TOKEN which is important.
+
+3. How to run code?
+
+Install the required golang package  "github.com/slack-go/slack".
+syntax to install  - > go get github.com/slack-go/slack.
+There are other packages also which is required.Install these packages.
+
+
+**************************************************************************************************
+                                   CODE-EXPLANATION
+**************************************************************************************************
+
+1. for evt := range slackSocketClient.Events  -> This will handle various events which received through 
+socket mode.
+
+2. socketmode.EventTypeInteractive:
+    This handle various events like button click,modals etc.
+
+3.  socketmode.EventTypeEventsAPI:
+    This is the main piece of code.It handles the direct message event,bot mention events and other 
+    callback events.
+
+4.  slackevents.AppMentionEvent:
+    This handle the event when somebody mention the botname like @botname.Any message which is type
+    after @botname we get in the payload.
+
+5.  slackevents.MessageEvent:
+    This handle the direct message event.
+
+6.  c.slackClient.PostMessage(event.Channel, slack.MsgOptionText(msg, false)):
+    This line of code is writing the response back to the server.
+
+
+
+
+
+
