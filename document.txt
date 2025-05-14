@@ -73,6 +73,40 @@ socket mode.
 I have used the config file to manage the configuration for the each environment like localhost,
 dev and prod.
 
+*****************************************************************************************************
+                        HOW TO RUN THE APPLICATION
+*****************************************************************************************************
+First create a .secrets Folder and inside .secrets folder create .env.{environment} file.
+I am running the code in localhost that's why I have defined the environment file Name .env.localhost.
+
+Now Get the SLACK_APP_TOKEN and SLACK_BOT_TOKEN.I have defined the process above to get the token.
+__________________________
+|SLACK_APP_TOKEN=""       |
+|SLACK_BOT_TOKEN=""       |
+|MOCK_SERVER_BASE_URL=""  |
+|MOCK_SERVER_PORT=""         |
+|_________________________|
+
+Define 2 other environment variable MOCK_SERVER_BASE_URL and MOCK_SERVER_PORT.This is for mock server.
+
+Currently I am running it on localhost.
+
+For running this code you can either run locally or using docker.
+
+For locally: 
+ go run cmd/http/main.go   ->mock-server
+ go run cmd/main.go     ->  for running application communicating to slack.
+
+
+Using Docker:
+
+ build the mock server docker image:  docker build -t http_app -f Dockerfile.http .
+ run the mock server docker image:   docker run -d -p 8080:8080 http_app
+ for runnng slack application : go run cmd/main.go
+
+ Docker-compose.yml is giving some error.
+
+
 
 
 
