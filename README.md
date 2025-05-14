@@ -1,5 +1,5 @@
 
-# Document.txt file has all the explanation about this project.
+# document.txt file has all the explanation about this project.
 
 
 1. Clone the repository.
