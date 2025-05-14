@@ -1,4 +1,8 @@
-1. CLone the repository.
+
+# Document.txt file has all the explanation about this project.
+
+
+1. Clone the repository.
 2. Create .secrets folder and create .env.localhost file.
 3. Define the environment varibale. For example consider .env.example.
    SLACK_APP_TOKEN=""
