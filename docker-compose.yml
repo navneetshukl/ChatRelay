@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  http_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.http
+    ports:
+      - "8080:8080"
+    networks:
+      - appnet
+
+  main_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.main
+    depends_on:
+      - http_app
+    networks:
+      - appnet
+
+networks:
+  appnet:
