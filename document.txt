@@ -106,7 +106,12 @@ Using Docker:
 
  Docker-compose.yml is giving some error.
 
+****************************************************************************************************
+                    ARCHITECTURE AND DESIGN PATTERN
+****************************************************************************************************
 
+ARCHITECTURE  ->  CLEAN ARCHITECTURE
+DESIGN PATTERN  ->  SOLID DESIGN PATTERN
 
 
 
